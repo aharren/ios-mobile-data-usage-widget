@@ -16,9 +16,18 @@ const C = {
 // the data
 //
 
+const request = new Request('https://pass.telekom.de/api/service/generic/v1/status');
+const response = await (async () => {
+  try {
+    return await request.loadJSON();
+  } catch (err) {
+    return {};
+  }
+})();
+
 const data = {
-  usedPercentage: 50,
-}
+  usedPercentage: response.usedPercentage || 0,
+};
 
 //
 // drawing functions
