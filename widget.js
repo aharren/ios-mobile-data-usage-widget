@@ -16,18 +16,47 @@ const C = {
 // the data
 //
 
-const request = new Request('https://pass.telekom.de/api/service/generic/v1/status');
-const response = await (async () => {
+const now = new Date();
+
+const liveData = await(async () => {
   try {
-    return await request.loadJSON();
+    // retrieve current live data via status API, only works on mobile network
+    const request = new Request('https://pass.telekom.de/api/service/generic/v1/status');
+    const response = await request.loadJSON();
+    return {
+      timestamp: response.usedAt || now.getTime(),
+      usedPercentage: response.usedPercentage || 0,
+    }
   } catch (err) {
+    // request failed, or parsing failed, or not on mobile network
     return {};
   }
 })();
 
-const data = {
-  usedPercentage: response.usedPercentage || 0,
-};
+const fileManager = FileManager.local();
+const cacheFile = fileManager.joinPath(fileManager.documentsDirectory(), 'mobile-data-usage.json');
+
+const data = (() => {
+  if (liveData.timestamp) {
+    // write live data to the cache file
+    fileManager.writeString(cacheFile, JSON.stringify(liveData));
+    return liveData;
+  } else {
+    // try to load last live data from the cache file
+    const cachedData = (() => {
+      try {
+        return JSON.parse(fileManager.readString(cacheFile)) || {};
+      } catch (err) {
+        // cache file does not exist, or is not valid
+        return {};
+      }
+    })();
+    return {
+      timestamp: cachedData.timestamp || now.getTime(),
+      usedPercentage: cachedData.usedPercentage || 0,
+    }
+  }
+})();
 
 //
 // drawing functions
