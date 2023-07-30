@@ -5,10 +5,12 @@
 //
 
 const C = {
-  colors: {
-    used: Color.white(),
-    unused: new Color('#303030'),
-    text: Color.white(),
+  data: {
+    colors: {
+      used: Color.white(),
+      unused: new Color('#303030'),
+      text: Color.white(),
+    }
   },
   background: {
     gradient: [
@@ -139,17 +141,19 @@ const widget = new ListWidget();
 const stack = widget.addStack();
 stack.layoutHorizontally();
 
-const size = { width: 120, height: 120 };
-const segments = [
-  { value: data.usedPercentage, color: C.colors.used },
-];
-const image = imageWithMultiSegmentDonut(
-  size,
-  { x: size.width / 2, y: size.height / 2, radius: (size.width - 12) / 2, lineWidth: 12, maxValue: 100, color: C.colors.unused },
-  segments,
-  { text: data.usedPercentage, fontSize: 12, color: C.colors.text }
-);
-stack.addImage(image);
+stack.addImage((() => {
+  const size = { width: 120, height: 120 };
+  const segments = [
+    { value: data.usedPercentage, color: C.data.colors.used },
+  ];
+  const image = imageWithMultiSegmentDonut(
+    size,
+    { x: size.width / 2, y: size.height / 2, radius: (size.width - 12) / 2, lineWidth: 12, maxValue: 100, color: C.data.colors.unused },
+    segments,
+    { text: data.usedPercentage, fontSize: 12, color: C.data.colors.text }
+  );
+  return image;
+})());
 
 widget.backgroundGradient = (() => {
   const gradient = new LinearGradient();
