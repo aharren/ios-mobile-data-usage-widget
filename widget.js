@@ -9,7 +9,13 @@ const C = {
     used: Color.white(),
     unused: new Color('#303030'),
     text: Color.white(),
-  }
+  },
+  background: {
+    gradient: [
+      { location: 0, color: Color.black() },
+      { location: 1, color: new Color('#202020') },
+    ],
+  },
 }
 
 //
@@ -145,10 +151,12 @@ const image = imageWithMultiSegmentDonut(
 );
 stack.addImage(image);
 
-const gradient = new LinearGradient()
-gradient.colors = [ new Color('#000000'), new Color('#202020') ];
-gradient.locations = [ 0, 1 ];
-widget.backgroundGradient = gradient;
+widget.backgroundGradient = (() => {
+  const gradient = new LinearGradient();
+  gradient.colors = C.background.gradient.map((element) => element.color);
+  gradient.locations = C.background.gradient.map((element) => element.location);
+  return gradient;
+})();
 
 await widget.presentSmall();
 Script.setWidget(widget);
