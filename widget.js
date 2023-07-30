@@ -32,8 +32,9 @@ const liveData = await(async () => {
     const request = new Request('https://pass.telekom.de/api/service/generic/v1/status');
     const response = await request.loadJSON();
     return {
-      timestamp: response.usedAt || now.getTime(),
-      usedPercentage: response.usedPercentage || 0,
+      timestamp: parseFloat(response.usedAt) || now.getTime(),
+      usedPercentage: parseFloat(response.usedPercentage) || 0,
+      usedVolume: parseFloat(response.usedVolume) || 0,
     }
   } catch (err) {
     // request failed, or parsing failed, or not on mobile network
@@ -60,8 +61,9 @@ const data = (() => {
       }
     })();
     return {
-      timestamp: cachedData.timestamp || now.getTime(),
-      usedPercentage: cachedData.usedPercentage || 0,
+      timestamp: parseFloat(cachedData.timestamp) || now.getTime(),
+      usedPercentage: parseFloat(cachedData.usedPercentage) || 0,
+      usedVolume: parseFloat(cachedData.usedVolume) || 0,
     }
   }
 })();
@@ -142,6 +144,14 @@ const stack = widget.addStack();
 stack.layoutHorizontally();
 
 stack.addImage((() => {
+  const usedVolumeText = (() => {
+    const MiB = 1024 * 1024;
+    const GiB = 1024 * MiB;
+    return data.usedVolume < GiB
+      ? (data.usedVolume / MiB).toFixed(1) + ' MiB'
+      : (data.usedVolume / GiB).toFixed(3) + ' GiB';
+  })();
+
   const size = { width: 120, height: 120 };
   const segments = [
     { value: data.usedPercentage, color: C.data.colors.used },
@@ -150,7 +160,7 @@ stack.addImage((() => {
     size,
     { x: size.width / 2, y: size.height / 2, radius: (size.width - 12) / 2, lineWidth: 12, maxValue: 100, color: C.data.colors.unused },
     segments,
-    { text: data.usedPercentage, fontSize: 12, color: C.data.colors.text }
+    { text: usedVolumeText, fontSize: 12, color: C.data.colors.text }
   );
   return image;
 })());
