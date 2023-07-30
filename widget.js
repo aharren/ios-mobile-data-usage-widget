@@ -9,23 +9,23 @@ const C = {
     recent: {
       maxTimeDeltaToNow: 2/*h*/ * 60/*m*/ * 60/*s*/ * 1000/*ms*/,
       colors: {
-        used: Color.white(),
-        unused: new Color('#303030'),
-        text: Color.white(),
+        used: new Color('ffffff'),
+        unused: new Color('303030'),
+        text: new Color('ffffff'),
       },
     },
     outdated: {
       colors: {
-        used: new Color('#c0c0c0'),
-        unused: new Color('#181818'),
-        text: new Color('#c0c0c0'),
+        used: new Color('c0c0c0'),
+        unused: new Color('181818'),
+        text: new Color('c0c0c0'),
       }
     },
   },
   background: {
     gradient: [
-      { location: 0, color: Color.black() },
-      { location: 1, color: new Color('#202020') },
+      { location: 0, color: new Color('000000'), },
+      { location: 1, color: new Color('202020') },
     ],
   },
 }
