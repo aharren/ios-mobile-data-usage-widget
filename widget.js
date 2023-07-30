@@ -6,11 +6,21 @@
 
 const C = {
   data: {
-    colors: {
-      used: Color.white(),
-      unused: new Color('#303030'),
-      text: Color.white(),
-    }
+    recent: {
+      maxTimeDeltaToNow: 2/*h*/ * 60/*m*/ * 60/*s*/ * 1000/*ms*/,
+      colors: {
+        used: Color.white(),
+        unused: new Color('#303030'),
+        text: Color.white(),
+      },
+    },
+    outdated: {
+      colors: {
+        used: new Color('#c0c0c0'),
+        unused: new Color('#181818'),
+        text: new Color('#c0c0c0'),
+      }
+    },
   },
   background: {
     gradient: [
@@ -152,15 +162,19 @@ stack.addImage((() => {
       : (data.usedVolume / GiB).toFixed(3) + ' GiB';
   })();
 
+  const colors = data.timestamp >= now - C.data.recent.maxTimeDeltaToNow
+    ? C.data.recent.colors
+    : C.data.outdated.colors;
+
   const size = { width: 120, height: 120 };
   const segments = [
-    { value: data.usedPercentage, color: C.data.colors.used },
+    { value: data.usedPercentage, color: colors.used },
   ];
   const image = imageWithMultiSegmentDonut(
     size,
-    { x: size.width / 2, y: size.height / 2, radius: (size.width - 12) / 2, lineWidth: 12, maxValue: 100, color: C.data.colors.unused },
+    { x: size.width / 2, y: size.height / 2, radius: (size.width - 12) / 2, lineWidth: 12, maxValue: 100, color: colors.unused },
     segments,
-    { text: usedVolumeText, fontSize: 12, color: C.data.colors.text }
+    { text: usedVolumeText, fontSize: 12, color: colors.text }
   );
   return image;
 })());
