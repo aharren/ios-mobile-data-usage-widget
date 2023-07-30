@@ -9,14 +9,14 @@ const C = {
     recent: {
       maxTimeDeltaToNow: 2/*h*/ * 60/*m*/ * 60/*s*/ * 1000/*ms*/,
       colors: {
-        used: new Color('ffffff'),
+        used: new Color('5588ff'),
         unused: new Color('303030'),
         text: new Color('ffffff'),
       },
     },
     outdated: {
       colors: {
-        used: new Color('c0c0c0'),
+        used: new Color('d0d0d0'),
         unused: new Color('181818'),
         text: new Color('c0c0c0'),
       }

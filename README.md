@@ -12,11 +12,11 @@ to indicate that the data is outdated.
 
 - Recent usage data:
 
-  ![](readme-assets/example-small-recent.png)
+  ![](readme-assets/example-small-1-recent.png) ![](readme-assets/example-small-2-recent.png)
 
 - Outdated usage data:
 
-  ![](readme-assets/example-small-outdated.png)
+  ![](readme-assets/example-small-1-outdated.png) ![](readme-assets/example-small-2-outdated.png)
 
 ## Configuration
 
